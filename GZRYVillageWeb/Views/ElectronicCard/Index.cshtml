@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LeftPartPage.cshtml";
+}
+@section TitleName{
+    <li>电子储存卡管理</li>
+    <li class="active">添加新类型卡</li>
+}
+
+
+@section js{
+    <script src="~/Content/js/Shade.js"></script>
+    <script src="~/Content/js/ElectronicType/Index.js"></script>
+}
+
+@section css{
+    <link href="~/Content/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/DataTable.css" rel="stylesheet" />
+    <link href="~/Content/css/Shade.css" rel="stylesheet" />
+
+}
+@*<input type="hidden" id="Hidden_ElectronicTypeId" value="@ViewBag.ElectronicTypeId" />*@
+<section>
+    <div class="row">
+        <div style="width:100%">
+            <div class="form-group col-lg-12">
+                <div class="col-lg-2 pull-right">
+                    <button id="search" class="btn btn-warning pull-right" type="button"><i class="fa fa-search"></i> 搜 索</button>
+                    <input type="text" placeholder="请输入搜索内容" id="search-Input" class="form-control pull-right Search-Input">
+                </div>
+                <div class="col-lg-2 pull-left">
+                    <button type="button" class="btn btn-primary btn-success" data-toggle="modal" data-target="#modalSuccess" id="insert">
+                        <i class="glyphicon glyphicon-plus"></i> 添加新类型卡
+                    </button>
+                </div>
+            </div>
+            <table id="ElectronicCard" class="col-lg-12 table table-striped table-bordered" data-page-length="10" data-order="[[0,&quot;asc&quot;]]" width="100%">
+                <thead>
+                    <tr>
+                        <th data-data="ElectronicTypeId" data-visible="false">电子卡Id</th>
+                        <th data-orderable="false">
+                            <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                <input type="checkbox" id="checkbox-all" />
+                                <label for="checkbox-all"></label>
+                            </div>
+                        </th>
+                        <th data-data="CardName">卡片名称</th>
+                        <th data-data="CardImage">卡片图案</th>
+                        <th data-data="CardMoney">储值金额</th>
+                        <th data-data="ElectronicTypeId" style="border-left:none;border-right:none;text-align:center" data-orderable="false">操作</th>
+                        <th data-data="ElectronicTypeId" style="border-left:none;" data-orderable="false"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    $(function () {
+        var userTable = $('#ElectronicCard').dataTable({
+            "ajax": {
+                "url": "@Url.Action("Get_ElectronicType_List", "ElectronicCardAjax")",
+                "data": function (data) {
+                    //添加额外的参数传给服务器
+                    data.SearchKey = $("#search-Input").val();
+                   // data.ElectronicTypeId = $("#Hidden_ElectronicTypeId").val();
+                    //data.ElectronicTypeId = 2;
+                    return JSON.stringify(data);
+                }
+            },
+            "columnDefs": [
+            {
+                "targets": 1,
+                "width": "15px",
+                render: function (data, type, full, meta) {
+                    var num = meta.row + 1;
+                    return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
+                }
+            },
+            {
+                "targets": -1,
+                "width": "86px",
+                render: function (data, type, full, meta) {
+                    return '<a class="btn btn-sm btn-info" href="/MemberManage/Coupon?ElectronicTypeId=' + data + '">批量生成卡密</a>';
+                }
+            },
+            {
+                "targets": -2,
+                "width": "74px",
+                render: function (data, type, full, meta) {
+                    return '<a class="btn btn-sm btn-info" href="/ElectronicCard/ElectronicCardView?ElectronicTypeId=' + data + '">查看该类型已生成卡片</a>';
+                }
+            }]
+        });
+        //查询按钮
+        $("#search").click(function () {
+            userTable.api().ajax.reload();
+        });
+        //添加按钮
+        $("#insert").click(function () {
+            add();
+            //InsertElectronicType();
+        });
+        //添加按钮
+        $("#Modify_ElectronicCard").click(function () {
+          
+            InsertElectronicType();
+        });
+    });
+
+</script>
+
+<div class="box">
+    <div id="dialogBg"></div>
+    <div id="dialog" class="animated">
+        <img src="~/Content/image/Shade/ico.png" class="dialogIco" width="50" height="50" />
+        <div class="dialogTop">
+            <a href="javascript:;" class="claseDialogBtn"><i class="fa fa-close"></i></a>
+        </div>
+        <form action="" method="post" id="editForm">
+            <ul class="editInfos">
+                <li>
+                    <label>
+                        卡片名称：<input type="text" id="CardName" value="" class="ipt" />
+                        <input type="hidden" id="CardName_Hidden" />
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        卡片图案：<input type="text" id="CardImage" value="" class="ipt" />
+                        <input type="hidden" id="CardImage_Hidden" />
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        储值金额：<input type="text" id="CardMoney" value="" class="ipt" />
+                        <input type="hidden" id="CardMoney_Hidden" />
+                    </label>
+                </li>
+               
+                <li>
+                    <input id="Modify_ElectronicCard" type="button" onclick="" value="添加新类型卡" class="submitBtn" />
+                </li>
+            </ul>
+        </form>
+    </div>
+   </div>

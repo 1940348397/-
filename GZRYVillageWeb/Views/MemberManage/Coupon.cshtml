@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewBag.Title = "Coupon";
+    Layout = "~/Views/Shared/LeftPartPage.cshtml";
+}
+
+@section TitleName{
+    <li>会员卡管理</li>
+    <li><a href="../MemberManage/Index">添加新类型卡</a></li>
+    <li class="active">包含优惠卷</li>
+}
+
+@section js{
+    <script src="~/Content/js/User/Index.js"></script>
+    <script src="~/Content/js/Shade.js"></script>
+    <script src="~/Content/js/User/Index.js"></script>
+<script src="~/Content/js/MemberCard/Index.js"></script>
+}
+
+@section css{
+    <link href="~/Content/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/DataTable.css" rel="stylesheet" />
+    <link href="~/Content/css/User/Index.css" rel="stylesheet" />
+    <link href="~/Content/css/Shade.css" rel="stylesheet" />
+}
+
+@section Li_User
+{
+    active
+}
+
+<input type="hidden" id="Hidden_MemberShipCard" value="@ViewBag.MemberShipTypeId" />
+<input type="hidden" id="Hidden_Search"/>
+<section>
+    <div class="row">
+        <div style="width:100%">
+            <h5 style="font-weight:bold;">
+                该用户所拥有的优惠券：
+            </h5>
+
+            <table id="Coupon1" class="col-lg-12 table table-striped table-bordered" data-page-length="10" data-order="[[0,&quot;asc&quot;]]" width="100%">
+                <thead>
+                    <tr>
+                        <th data-data="CouponId" data-visible="false">优惠卷Id</th>
+                        <th data-orderable="false">
+                            <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                <input type="checkbox" id="checkbox-all" />
+                                <label for="checkbox-all"></label>
+                            </div>
+                        </th>
+                        <th data-data="CouponName">优惠卷名称</th>
+                        <th data-data="CouponDescribe">优惠卷简述</th>
+                        <th data-data="ExpirationDay">优惠卷过期时间</th>
+                        <th data-data="CouponId" style="text-align:center" data-orderable="false">操作</th>
+                    </tr>
+                </thead>
+            </table>
+
+
+
+        </div>
+    </div>
+</section>
+<section>
+    <div class="row">
+        <div style="width:100%">
+            <h5 style="font-weight:bold;margin-top: -15px;">
+                全部的优惠券：
+            </h5>
+            <table id="Coupon2" class="col-lg-12 table table-striped table-bordered" data-page-length="10" data-order="[[0,&quot;asc&quot;]]" width="100%">
+                <thead>
+                    <tr>
+                        <th data-data="CouponId" data-visible="false">优惠卷Id</th>
+                        <th data-orderable="false">
+                            <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                <input type="checkbox" id="checkbox-all" />
+                                <label for="checkbox-all"></label>
+                            </div>
+                        </th>
+                        <th data-data="CouponName">优惠卷名称</th>
+                        <th data-data="CouponDescribe">优惠卷简述</th>
+                        <th data-data="ExpirationDay">优惠卷过期时间</th>
+                        <th data-data="CouponId" style="text-align:center" data-orderable="false">操作</th>
+                    </tr>
+                </thead>
+            </table>
+
+
+
+        </div>
+    </div>
+</section>
+
+
+<script type="text/javascript">
+    $(function () {
+        var Coupon1Table = $('#Coupon1').dataTable({ 
+            "ajax": {
+                "url": "@Url.Action("Get_Coupon_List", "MemberCardAjax")",
+                "data": function (data) {
+                    //添加额外的参数传给服务器
+                    data.MemberShipTypeId = $("#Hidden_MemberShipCard").val();
+                    data.SearchKey = $("#search-Input").val();
+                    data.length = 5;
+                    return JSON.stringify(data);
+                }
+            },
+            "bLengthChange": false,
+            "iDisplayLength": 5,
+            "columnDefs": [
+            {
+                "targets": 1,
+                "width": "15px",
+                render: function (data, type, full, meta) {
+                    var num = meta.row + 1;
+                    return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
+                }
+            },
+             {
+                 "targets": -1,
+                 "width": "80px",
+                 render: function (data, type, full, meta) {
+                     var MemberShipTypeId = $("#Hidden_MemberShipCard").val();
+                     return '<a class="btn btn-sm btn-info" href="javascript:;" onclick="deleteCoupon(' + MemberShipTypeId + ',' + data + ') ">删除优惠券</a>';
+                 }
+
+
+             }]
+        });
+        var Coupon2Table = $('#Coupon2').dataTable({ 
+            "ajax": {
+                "url": "@Url.Action("Get_Coupon_AllList", "MemberCardAjax")",
+                "data": function (data) {
+                    //添加额外的参数传给服务器
+                    data.MemberShipTypeId = $("#Hidden_MemberShipCard").val();
+                    data.SearchKey = $("#search-Input").val();
+                    data.length = 5;
+                    return JSON.stringify(data);
+                }
+            },
+            "bLengthChange": false,
+            "columnDefs": [
+        {
+            "targets": 1,
+            "width": "15px",
+            render: function (data, type, full, meta) {
+                var num = meta.row + 1;
+                return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
+            }
+        },
+             {
+                 "targets": -1,
+                 "width": "80px",
+                 render: function (data, type, full, meta) {
+                     var MemberShipTypeId = $("#Hidden_MemberShipCard").val();
+                     return '<a class="btn btn-sm btn-info" href="javascript:;" onclick="InsertCoupon(' + MemberShipTypeId + ',' + data + ')">添加优惠券</a>';
+                 }
+
+
+             }]
+        });
+       
+        //查询按钮
+        $("#Hidden_Search").click(function () {
+            Coupon1Table.api().ajax.reload();
+            Coupon2Table.api().ajax.reload();
+        });
+    });
+
+</script>
+

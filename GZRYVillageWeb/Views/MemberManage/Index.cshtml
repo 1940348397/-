@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LeftPartPage.cshtml";
+}
+@section TitleName{
+    <li>会员卡管理</li>
+    <li class="active">添加新类型卡</li>
+    <li class="active">已有卡片类型</li>
+}
+
+
+@section js{
+    <script src="~/Content/js/Shade.js"></script>
+    <script src="~/Content/js/MemberCard/Index.js"></script>
+}
+
+@section css{
+    <link href="~/Content/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/DataTable.css" rel="stylesheet" />
+    <link href="~/Content/css/Shade.css" rel="stylesheet" />
+
+}
+
+<script type="text/javascript">
+
+    //页面加载完成后显示
+    $(function () {
+
+        $("#Add_MemberCard").click(function () {
+            $.ajax({
+                url: "/MemberManage/UploadImage",
+                type: 'get',
+                dataType: 'html',
+                data: {
+                    CardName: $("#CardName").val().trim(),
+                    IconUrl: $("#IconUrl").val().trim(),
+                    CouponName: $("#CouponName").val().trim()
+
+                },
+                success: function (data) {
+
+                    if (data == "OK") {
+                        alert('恭喜您，新增成功');
+                        //刷新
+                        parent.location.reload();
+                    }
+                    else {
+                        alert("该卡片名称已存在！");
+                    }
+                },
+                error: function (data) {
+                }
+            })
+        })
+
+    })
+
+    function fileUp() {
+        $("#files").change(function () {
+            if ($(this).val()) {//选择了图片上传的时候，异步提交
+                $("#AddForm").ajaxSubmit({
+                    type: "Post",/*设置表单以post方法提交*/
+                    dataType: "text", /*设置返回值类型为文本*/
+                    url: '/MemberManage/UploadImage', /*设置post提交到的页面*/
+                    success: function (data) {
+                        $("#IconUrl").val(data); //把返回来的地址赋到那个input上
+                        $("#files").val("");//把值去掉
+                    }
+                })
+            }
+        })
+    }
+
+</script>
+
+<section>
+    <div class="row">
+        <div style="width:100%">
+            <div class="form-group col-lg-12">
+                <div class="col-lg-2 pull-right">
+                    <button id="search" class="btn btn-warning pull-right" type="button"><i class="fa fa-search"></i> 搜 索</button>
+                    <input type="text" placeholder="请输入搜索内容" id="search-Input" class="form-control pull-right Search-Input">
+                </div>
+                <div class="col-lg-2 pull-left">
+                    <button type="button" class="btn btn-primary btn-success" data-toggle="modal" data-target="#modalSuccess" id="insert">
+                        <i class="glyphicon glyphicon-plus"></i> 添加数据
+                    </button>
+                </div>
+            </div>
+            <table id="User" class="col-lg-12 table table-striped table-bordered" data-page-length="10" data-order="[[0,&quot;asc&quot;]]" width="100%">
+                <thead>
+                    <tr>
+                        <th data-data="MemberShipTypeId" data-visible="false">卡片类型Id</th>
+                        <th data-orderable="false">
+                            <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                <input type="checkbox" id="checkbox-all" />
+                                <label for="checkbox-all"></label>
+                            </div>
+                        </th>
+                        <th data-data="MemberShipTypeId">卡片类型</th>
+                        <th data-data="CardName">卡片名称</th>
+                        <th data-data="CardImage">卡片图案</th>
+                        <th data-data="MemberShipTypeId" style="border-right:none;" data-orderable="false"></th>
+                        <th data-data="MemberShipTypeId" style="border-left:none;border-right:none;text-align:center" data-orderable="false">操作</th>
+                        <th data-data="MemberShipTypeId" style="border-left:none;" data-orderable="false"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        var userTable = $('#User').dataTable({
+            "ajax": {
+                "url": "@Url.Action("Get_CardType_List", "MemberCardAjax")",
+                "data": function (data) {
+                    //添加额外的参数传给服务器
+                    data.SearchKey = $("#search-Input").val();
+                    //data.MemberShipCardId = 1;
+                    return JSON.stringify(data);
+                }
+            },
+            "columnDefs": [
+            {
+                "targets": 1,
+                "width": "15px",
+                render: function (data, type, full, meta) {
+                    var num = meta.row + 1;
+                    return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
+                }
+            },
+            {
+                "targets": -1,
+                "width": "62px",
+                render: function (data, type, full, meta) {
+                    return '<a class="btn btn-sm btn-info"  href="/MemberManage/Coupon?MemberShipTypeId=' + data + '">包含优惠券</a>';
+                }
+            },
+            {
+                "targets": -2,
+                "width": "86px",
+                render: function (data, type, full, meta) {
+                    return '<a class="btn btn-sm btn-info" href="/MemberManage/Coupon?MemberShipTypeId=' + data + '">批量导入卡</a>';
+                }
+            },
+            {
+                "targets": -3,
+                "width": "74px",
+                render: function (data, type, full, meta) {
+                    return '<a class="btn btn-sm btn-info" href="/MemberManage/MemberView?MemberShipTypeId=' + data + '">查看已生成卡片</a>';
+                }
+            }]
+        });
+        //查询按钮
+        $("#search").click(function () {
+            userTable.api().ajax.reload();
+        });
+        //添加按钮
+        $("#insert").click(function () {
+            add();
+        });
+    });
+
+</script>
+<div class="box">
+    <div id="dialogBg"></div>
+    <div id="dialog" class="animated">
+        <img src="~/Content/image/Shade/ico.png" class="dialogIco" width="50" height="50" />
+        <div class="dialogTop">
+            <a href="javascript:;" class="claseDialogBtn"><i class="fa fa-close"></i></a>
+        </div>
+        <form action="" method="post" id="AddForm">
+            <ul class="editInfos">
+                <li>
+                    <label>
+                        卡片名称：<input type="text" id="CardName" value="" class="ipt" />
+                        <input type="hidden" id="CardName_Hidden" />
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        卡片图案：
+                        @using (Ajax.BeginForm("AddMessages", "MenuInfo", new AjaxOptions { HttpMethod = "post", OnSuccess = "Successd" }, new { @id = "from1", enctype = "multipart/form-data" }))  //这里最好还是加上 enctype = "multipart/form-data" }
+            {
+                            <button id="btn_file">点击选择图片</button>
+                            <input id="IconUrl" name="IconUrl">
+                            <input type="file" id="files" name="files" style="display:none" value="点击选择图片" />
+                        }
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        内含优惠券：
+                        @*@Html.DropDownList("CouponName", ViewBag.memberType as SelectList, "--请选择--")*@
+                        <input type="hidden" id="CouponName_Hidden" />
+
+
+                    </label>
+                </li>
+
+                <li>
+                    <input id="Add_MemberCard" type="button" onclick="" value="添加新类型卡" class="submitBtn" />
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#btn_file").click(function () {
+            $("#files").trigger("click");
+        });
+    });
+
+</script>
+
+
+

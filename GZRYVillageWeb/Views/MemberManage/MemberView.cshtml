@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "MemberView";
+    Layout = "~/Views/Shared/LeftPartPage.cshtml";
+}
+
+@section TitleName{
+    <li>会员卡管理</li>
+    <li class="active"><a href="../MemberManage/Index">添加新类型卡</a></li>
+    <li class="active">查看已生成卡片</li>
+}
+
+
+@section js{
+    <script src="~/Content/js/Shade.js"></script>
+    <script src="~/Content/js/MemberCard/Index.js"></script>
+}
+
+@section css{
+    <link href="~/Content/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/DataTable.css" rel="stylesheet" />
+    <link href="~/Content/css/Shade.css" rel="stylesheet" />
+
+}
+
+<input type="hidden" id="Hidden_MemberShipCard" value="@ViewBag.MemberShipTypeId" />
+<section>
+    <div class="row">
+        <div style="width:100%">
+            <div class="form-group col-lg-12">
+                <div class="col-lg-2 pull-right">
+                    <button id="search" class="btn btn-warning pull-right" type="button"><i class="fa fa-search"></i> 搜 索</button>
+                    <input type="text" placeholder="请输入搜索内容" id="search-Input" class="form-control pull-right Search-Input">
+                </div>
+                <div class="col-lg-2 pull-left">
+                    <button type="button" class="btn btn-primary btn-success" data-toggle="modal" data-target="#modalSuccess" id="insert">
+                        <i class="glyphicon glyphicon-plus"></i> 添加数据
+                    </button>
+                </div>
+            </div>
+            <table id="User" class="col-lg-12 table table-striped table-bordered" data-page-length="10" data-order="[[0,&quot;asc&quot;]]" width="100%">
+                <thead>
+                    <tr>
+                        <th data-data="MemberShipCardId" data-visible="false">会员卡Id</th>
+                        <th data-orderable="false">
+                            <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                <input type="checkbox" id="checkbox-all" />
+                                <label for="checkbox-all"></label>
+                            </div>
+                        </th>
+                        <th data-data="CardName">会员卡类型名</th>
+                        <th data-data="MemberShipTypeId">卡片图案</th>
+                        <th data-data="IsUser">是否被使用</th>
+                        @*<th data-data="IsDelete">是否有效</th>*@
+                   
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function () {
+        var userTable = $('#User').dataTable({
+            "ajax": {
+                "url": "@Url.Action("Get_Card_List", "MemberCardAjax")",
+                "data": function (data) {
+                    //添加额外的参数传给服务器
+                    data.SearchKey = $("#search-Input").val();
+                    data.MemberShipTypeId = $("#Hidden_MemberShipCard").val();
+                    return JSON.stringify(data);
+                }
+            },
+            "bLengthChange": false,
+            "iDisplayLength": 5,
+            "columnDefs": [
+            {
+                "targets": 1,
+                "width": "15px",
+                render: function (data, type, full, meta) {
+                    var num = meta.row + 1;
+                    return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
+                }             
+            }]
+        });
+        //查询按钮
+        $("#search").click(function () {
+            userTable.api().ajax.reload();
+        });
+        //添加按钮
+        $("#insert").click(function () {
+            add();
+        });
+    });
+
+</script>
+<script>
+    $(function () {
+        $("#btn_file").click(function () {
+            $("#files").trigger("click");
+        });
+    });
+
+</script>
+
+

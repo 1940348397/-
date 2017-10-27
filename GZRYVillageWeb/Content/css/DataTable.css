@@ -1,0 +1,13 @@
+﻿table tr th {
+    white-space: nowrap;
+}
+
+.row .col-lg-2 .Search-Input {
+    width: 150px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.checkbox3 label {
+    margin-bottom: 2px;
+}

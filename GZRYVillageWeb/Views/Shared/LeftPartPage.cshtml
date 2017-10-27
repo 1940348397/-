@@ -1,0 +1,149 @@
+﻿@{
+    Layout = "~/Views/Shared/ParantPage.cshtml";
+}
+
+@section css
+{
+    @RenderSection("css", required: false)
+}
+
+@section js
+{
+    @RenderSection("js", required: false)
+}
+
+@section TitleName
+{
+    @RenderSection("TitleName", required: false)
+}
+
+@section left_part
+{
+    <ul class="nav navbar-nav">
+        <li class="@RenderSection("Li_Title",required:false)">
+            <a href="../Login/Login">
+                <span class="icon fa fa-tachometer"></span><span class="title">主页</span>
+            </a>
+        </li>
+
+        <li class="@RenderSection("Li_User",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-form">
+                <span class="icon fa fa-user"></span><span class="title">用户管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-form" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../User/Index">会员列表</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="@RenderSection("Li_Coupon",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-Coupon">
+                <span class="icon fa fa-file"></span><span class="title">优惠卷管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-Coupon" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../Coupon/Index">优惠卷类型列表</a>
+                        </li>
+                        <li>
+                            <a href="../Coupon/Index">发放优惠卷</a>
+                        </li>
+                        <li>
+                            <a href="../Coupon/Index">已发放优惠卷管理</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="@RenderSection("Li_MemberCard",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-MemberCard">
+                <span class="icon fa fa-credit-card"></span><span class="title">会员卡管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-MemberCard" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../MemberManage/Index">添加新类型卡</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="@RenderSection("Li_Message",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-Message">
+                <span class="icon fa fa-comment"></span><span class="title">消息管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-Message" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../User/Index">新增</a>
+                        </li>
+                        <li>
+                            <a href="../User/Index">编辑、查看</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="@RenderSection("Li_Electronic",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-Electronic">
+                <span class="icon fa fa-credit-card"></span><span class="title">电子储存卡管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-Electronic" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../ElectronicCard/Index">添加新类型卡</a>
+                        </li>
+                        <li>
+                            <a href="../User/Index">已有卡片类型</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <li class="@RenderSection("Li_System",required:false) panel panel-default dropdown">
+            <a data-toggle="collapse" href="#dropdown-System">
+                <span class="icon fa fa-desktop"></span><span class="title">系统管理</span>
+            </a>
+            <!-- Dropdown level 1 -->
+            <div id="dropdown-System" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../User/Index">系统账户管理</a>
+                        </li>
+                        <li>
+                            <a href="../User/Index">退出登录</a>
+                        </li>
+                        <li>
+                            <a href="../User/Index">修改密码</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+    </ul>
+}
+
+@RenderBody()
+
+
+
