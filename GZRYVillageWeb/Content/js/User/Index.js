@@ -3,33 +3,84 @@
 var NotEditAlert;
 var PassWordAlert;
 var ErrorAlert;
-var SuccessAlert;
-//修改
+var SuccessUpdateAlert;
+var SuccessAddAlert;
+var NotSuccessAlert;
+
+//新增用户信息
+function add() {
+    className = $(this).attr('class');
+    $('.box1 #dialogBg').fadeIn(300);
+    $('.box1 #dialog').removeAttr('class').addClass('animated ' + className + '').fadeIn();
+}
+function InsertUserInfo() {
+    var UserName = $('.box1 table #UserName').val();
+    var UserNickName = $('.box1 table #UserNickName').val();
+    var UserPhone = $('.box1 table #UserPhone').val();
+    var UserEmail = $('.box1 table #UserEmail').val();
+    var Sex = GetRedioValue('.box1 table input[name="sex-insert"]');
+    var ConsumptionTime = $('.box1 table #ConsumptionTime').val();
+    jQuery.axpost("UserAjax/Insert_UserInfo", "UserName:'" + UserName +
+                                          "',UserNickName:'" + UserNickName +
+                                          "',UserPhone:'" + UserPhone +
+                                          "',UserEmail:'" + UserEmail +
+                                          "',sex:'" + Sex +
+                                          "',ConsumptionTime:'" + ConsumptionTime + "'"
+        , function (data) {
+            if (SuccessAddAlert) {
+                SuccessAddAlert.show();
+            }
+            else {
+                SuccessAddAlert = jqueryAlert({
+                    'content': '新增用户成功',
+                    'closeTime': 2000,
+
+                });
+            }
+            //添加数据成功后清空文本框内容
+            $('.box1 table #UserName').val("");
+            $('.box1 table #UserNickName').val("");
+            $('.box1 table #UserPhone').val("");
+            $('.box1 table #UserEmail').val("");
+            $('.box1 table input[name="sex-insert"]').removeAttr("checked");
+            $('.box1 table #ConsumptionTime').val("");
+            CloseDialog1();
+            //调用 search 的点击事件的两种方法
+            $("#search").trigger("click");
+            return;
+        }, ErrorAlert);
+}
+function CloseDialog1() {
+    $('.box1 #dialogBg').fadeOut(300, function () {
+        $('.box1 #dialog').addClass('bounceOutUp').fadeOut();
+    });
+};
+
+
+//修改用户信息
 function modify(UserId) {
     jQuery.axpost("UserAjax/Get_User_ById", "UserId:'" + UserId + "'", function (data) {
         className = $(this).attr('class');
-        $('#dialogBg').fadeIn(300);
-        $('#dialog').removeAttr('class').addClass('animated ' + className + '').fadeIn();
-        SetValue('.editInfos #UserName', data.Model1.UserName);
-        SetValue('.editInfos #UserNickName', data.Model1.UserNickName);
-        SetValue('.editInfos #UserPhone', data.Model1.UserPhone);
-        SetValue('.editInfos #UserEmail', data.Model1.UserEmail);
-        SetImgValue('.editInfos #UserImage', data.Model1.UserImage);
-        SetValue('.editInfos #ConsumptionTime', data.Model1.ConsumptionTime);
-        $('.editInfos #Modify_User').attr('onclick', 'modifyUserInfo(' + data.Model1.UserId + ')');
+        $('.box #dialogBg').fadeIn(300);
+        $('.box #dialog').removeAttr('class').addClass('animated ' + className + '').fadeIn();
+        SetValue('.box table #UserName', data.Model1.UserName);
+        SetValue('.box table #UserNickName', data.Model1.UserNickName);
+        SetValue('.box table #UserPhone', data.Model1.UserPhone);
+        SetValue('.box table #UserEmail', data.Model1.UserEmail);
+        SetSexValue('.box table input[name="sex"]', data.Model1.Sex);
+        SetValue('.box table #ConsumptionTime', data.Model1.ConsumptionTime);
+        $('.box table #Modify_User').attr('onclick', 'modifyUserInfo(' + data.Model1.UserId + ')');
         return;
     }, ErrorAlert);
 }
-
-
 function modifyUserInfo(UserId) {
-    var UserName = $('.editInfos #UserName').val();
-    var UserNickName = $('.editInfos #UserNickName').val();
-    var UserPhone = $('.editInfos #UserPhone').val();
-    var UserEmail = $('.editInfos #UserEmail').val();
-    var UserImage = $('.editInfos #UserImage').attr('src');
-    var ConsumptionTime = $('.editInfos #ConsumptionTime').val();
-    if (Compare('.editInfos #UserName') && Compare('.editInfos #UserNickName') && Compare('.editInfos #UserPhone') && Compare('.editInfos #UserEmail') && Compare('.editInfos #ConsumptionTime') && CompareImg('.editInfos #UserImage')) {
+    var UserName = $('.box table #UserName').val();
+    var UserNickName = $('.box table #UserNickName').val();
+    var UserPhone = $('.box table #UserPhone').val();
+    var UserEmail = $('.box table #UserEmail').val();
+    var Sex = GetRedioValue('.box table input[name="sex"]');
+    var ConsumptionTime = $('.box table #ConsumptionTime').val();
+    if (Compare('.box table #UserName') && Compare('.box table #UserNickName') && Compare('.box table #UserPhone') && Compare('.box table #UserEmail') && Compare('.box table #ConsumptionTime') && CompareSex('.box table input[name="sex"]')) {
         if (NotEditAlert) {
             NotEditAlert.show();
         }
@@ -46,14 +97,14 @@ function modifyUserInfo(UserId) {
                                           "',UserNickName:'" + UserNickName +
                                           "',UserPhone:'" + UserPhone +
                                           "',UserEmail:'" + UserEmail +
-                                          "',UserImage:'" + UserImage +
+                                          "',sex:'" + Sex +
                                           "',ConsumptionTime:'" + ConsumptionTime + "'"
         , function (data) {
-            if (SuccessAlert) {
-                SuccessAlert.show();
+            if (SuccessUpdateAlert) {
+                SuccessUpdateAlert.show();
             }
             else {
-                SuccessAlert = jqueryAlert({
+                SuccessUpdateAlert = jqueryAlert({
                     'content': '修改用户信息成功',
                     'closeTime': 2000,
                 });
@@ -67,8 +118,8 @@ function modifyUserInfo(UserId) {
 
 
 function CloseDialog() {
-    $('#dialogBg').fadeOut(300, function () {
-        $('#dialog').addClass('bounceOutUp').fadeOut();
+    $('.box #dialogBg').fadeOut(300, function () {
+        $('.box #dialog').addClass('bounceOutUp').fadeOut();
     });
 }
 
@@ -76,10 +127,38 @@ function SetValue(str, value) {
     $(str).val(value);
     $(str + '_Hidden').val(value);
 }
-
-function SetImgValue(str, value) {
-    $(str).attr('src',value);
+function SetSexValue(str, value) {
+    if (value == true) {
+        $(str)[1].checked = false;
+        $(str)[0].checked = true;
+    }
+    else if (value == false) {
+        $(str)[1].checked = true;
+        $(str)[0].checked = false;
+    }
+    else if (value == null) {
+        $(str)[1].checked = false;
+        $(str)[0].checked = false;
+    }
     $(str + '_Hidden').val(value);
+}
+
+function GetRedioValue(str) {
+    var value;
+    $(str).each(function () {
+        if ($(this)[0].checked == true) {
+            if ($(this)[0].value == "1") {
+                value = true;
+            }
+            else if ($(this)[0].value == "0") {
+                value = false;
+            }
+            else {
+                value = $(this)[0].value;
+            }
+        }
+    });
+    return value;
 }
 
 function Compare(str) {
@@ -93,9 +172,9 @@ function Compare(str) {
     }
 }
 
-function CompareImg(str) {
+function CompareSex(str) {
     var BeforStr = $(str + '_Hidden').val();
-    var AfterStr = $(str).attr('src');
+    var AfterStr = GetRedioValue('.box table input[name="sex"]');
     if (BeforStr == AfterStr) {
         return true;
     }

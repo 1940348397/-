@@ -29,6 +29,19 @@ namespace DbOpertion.Operation
             return query.GetQueryList(connection, transaction);
         }
 
+
+        /// <summary>
+        /// 根据主键筛选数据
+        /// </summary>
+        /// <param name="KeyId">主键Id</param>
+        /// <returns>是否成功</returns>
+        public TUser SelectById(int KeyId, IDbConnection connection = null, IDbTransaction transaction = null)
+        {
+            var query = new LambdaQuery<TUser>();
+            query.Where(p => p.UserId == KeyId);
+            return query.GetQueryList(connection, transaction).FirstOrDefault();
+        }
+
         /// <summary>
         /// 根据分页筛选数据
         /// </summary>
@@ -118,6 +131,18 @@ namespace DbOpertion.Operation
             {
                 update.Set(p => p.ConsumptionTime == tuser.ConsumptionTime);
             }
+            if (!tuser.LevelScore.IsNullOrEmpty())
+            {
+                update.Set(p => p.LevelScore == tuser.LevelScore);
+            }
+            if (!tuser.CreateTime.IsNullOrEmpty())
+            {
+                update.Set(p => p.CreateTime == tuser.CreateTime);
+            }
+            if (!tuser.DiamondsMoney.IsNullOrEmpty())
+            {
+                update.Set(p => p.DiamondsMoney == tuser.DiamondsMoney);
+            }
             if (!tuser.IsDelete.IsNullOrEmpty())
             {
                 update.Set(p => p.IsDelete == tuser.IsDelete);
@@ -164,6 +189,18 @@ namespace DbOpertion.Operation
             if (!tuser.ConsumptionTime.IsNullOrEmpty())
             {
                 insert.Insert(p => p.ConsumptionTime == tuser.ConsumptionTime);
+            }
+            if (!tuser.LevelScore.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.LevelScore == tuser.LevelScore);
+            }
+            if (!tuser.CreateTime.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.CreateTime == tuser.CreateTime);
+            }
+            if (!tuser.DiamondsMoney.IsNullOrEmpty())
+            {
+                insert.Insert(p => p.DiamondsMoney == tuser.DiamondsMoney);
             }
             if (!tuser.IsDelete.IsNullOrEmpty())
             {

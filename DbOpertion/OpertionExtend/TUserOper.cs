@@ -12,18 +12,6 @@ namespace DbOpertion.Operation
 {
     public partial class TUserOper : SingleTon<TUserOper>
     {
-        /// <summary>
-        /// 筛选全部数据
-        /// </summary>
-        /// <returns>对象列表</returns>
-        public List<TUser> LoginOn(string UserName, string PassWord)
-        {
-            var query = new LambdaQuery<TUser>();
-            query.Where(p => p.UserName == UserName || p.UserPhone == UserName);
-            query.Where(p => p.UserPassword == PassWord);
-            return query.GetQueryList();
-        }
-
 
         /// <summary>
         /// 根据分页筛选数据
@@ -33,7 +21,7 @@ namespace DbOpertion.Operation
         ///  <param name="PageSize">页面长度</param>
         ///  <param name="desc">排序</param>
         /// <returns>对象列表</returns>
-        public List<TUser> SelectByPage(string SearchKey, string Key, int start, int PageSize, bool desc = true)
+        public List<TUser> SelectSearchByPage(string SearchKey, string Key, int start, int PageSize, bool desc = true)
         {
             var query = new LambdaQuery<TUser>();
             if (!SearchKey.IsNullOrEmpty())
@@ -53,7 +41,7 @@ namespace DbOpertion.Operation
         ///  <param name="Key">主键</param>
         ///  <param name="desc">排序</param>
         /// <returns>对象列表</returns>
-        public int SelectCount(string SearchKey, string Key, bool desc = true)
+        public int SelectSearchCount(string SearchKey, string Key, bool desc = true)
         {
             var query = new LambdaQuery<TUser>();
             if (!SearchKey.IsNullOrEmpty())
@@ -68,18 +56,6 @@ namespace DbOpertion.Operation
         }
 
         /// <summary>
-        /// 根据用户Id筛选用户
-        /// </summary>
-        /// <param name="UserId">用户Id</param>
-        /// <returns>对象列表</returns>
-        public List<TUser> SelectById(int UserId)
-        {
-            var query = new LambdaQuery<TUser>();
-            query.Where(p => p.UserId == UserId);
-            return query.GetQueryList();
-        }
-
-        /// <summary>
         /// 根据用户手机筛选用户
         /// </summary>
         /// <param name="UserPhone">用户手机</param>
@@ -90,6 +66,18 @@ namespace DbOpertion.Operation
             query.Where(p => p.UserPhone == UserPhone);
             var List_User = query.GetQueryList();
             return List_User == null ? null : List_User.FirstOrDefault();
+        }
+        /// <summary>
+        /// 根据用户名，手机号码筛选用户
+        /// </summary>
+        /// <param name="UserPhone"></param>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
+        public List<TUser> SelectUserInfoByNameOrPhone(string UserName, string UserPhone, string UserEmail)
+        {
+            var query = new LambdaQuery<TUser>();
+            query.Where(p => p.UserName == UserName || p.UserPhone == UserPhone || p.UserEmail == UserEmail);
+            return query.GetQueryList();
         }
 
     }

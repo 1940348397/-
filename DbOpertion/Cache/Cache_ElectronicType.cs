@@ -17,15 +17,22 @@ namespace DbOpertion.Cache
         /// </summary>
         public List<ElectronicType> SelectElectronicTypeCard(string searchKey, string Key, int PageNo, int PageSize, DataTablesOrderDir? desc)
         {
-            bool order = false;
-            if (desc == DataTablesOrderDir.Asc)
+            if (Key=="CardImage")
             {
-                order = false;
+                Key = null;
             }
-            else if (desc == DataTablesOrderDir.Desc)
-            {
-                order = true;
-            }
+                bool order = false;
+            
+                if (desc == DataTablesOrderDir.Asc)
+                {
+                    order = false;
+                }
+                else if (desc == DataTablesOrderDir.Desc)
+                {
+                    order = true;
+                }
+
+            
             return ElectronicTypeOper.Instance.SelectByPage(searchKey, Key, PageNo, PageSize, order);
         }
       
@@ -34,6 +41,10 @@ namespace DbOpertion.Cache
         /// </summary>
         public int SelectElectronicTypeCardCount(string SearchKey, string Key, DataTablesOrderDir? desc)
         {
+            if (Key == "CardImage")
+            {
+                Key = null;
+            }
             bool order = false;
             if (desc == DataTablesOrderDir.Asc)
             {

@@ -54,32 +54,17 @@ namespace DbOpertion.Cache
             return MemberShipCardOper.Instance.SelectByPage(searchKey, Key, PageNo, PageSize, order);
         }
 
-       
-        //public int SelectMemberCardCount(string Key, DataTablesOrderDir? desc)
-        //{
-        //    bool order = false;
-        //    if (desc == DataTablesOrderDir.Asc)
-        //    {
-        //        order = false;
-        //    }
-        //    else if (desc == DataTablesOrderDir.Desc)
-        //    {
-        //        order = true;
-        //    }
-        //    return MemberShipCardOper.Instance.SelectCount(Key, order);
-        //}
-      
         /// <summary>
         /// 根据类型ID查找对应的会员卡信息
         /// </summary>
-        /// <param name="MemberShipTypeId"></param>
-        /// <param name="SearchKey"></param>
+        /// <param name="MemberShipTypeId">会员卡类型Id</param>
+        /// <param name="SearchKey">搜索关键字</param>
         /// <param name="Key"></param>
-        /// <param name="start"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="desc"></param>
+        /// <param name="start">开始数据</param>
+        /// <param name="pageSize">页面长度</param>
+        /// <param name="desc">排序</param>
         /// <returns></returns>
-        public Tuple<List<MemberShipCard>, int, int> SelectMemberCardList(int MemberShipTypeId, string SearchKey, string Key, int start, int pageSize, DataTablesOrderDir desc)
+        public Tuple<List<MemberCardByTypeInfo>, int, int> SelectMemberCardList(int MemberShipTypeId, string SearchKey, string Key, int start, int pageSize, DataTablesOrderDir desc)
         {
 
             bool asc;
@@ -92,12 +77,28 @@ namespace DbOpertion.Cache
                 asc = false;
 
             }
-            var list = MemberShipCardOper.Instance.SelectMemCardByTypeId(MemberShipTypeId, SearchKey, Key, start, pageSize);
-            var MemberCard_List = MemberShipCardOper.Instance.SelectByPageByMemberCard(MemberShipTypeId, SearchKey, Key, start, pageSize);
-            var All_Count = MemberShipCardOper.Instance.SelectMemberCardCountByTypeID(MemberShipTypeId,null);
+            var list = MemberShipCardOper.Instance.SelectMemCardByTypeId(MemberShipTypeId, SearchKey, Key, start, pageSize, asc);
+            var All_Count = MemberShipCardOper.Instance.SelectMemberCardCountByTypeID(MemberShipTypeId, null);
             var Count = MemberShipCardOper.Instance.SelectMemberCardCountByTypeID(MemberShipTypeId, SearchKey);
-            return new Tuple<List<MemberShipCard>, int, int>(MemberCard_List, All_Count, Count);
+            return new Tuple<List<MemberCardByTypeInfo>, int, int>(list, All_Count, Count);
 
+        }
+        /// <summary>
+        /// 添加会员卡
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public bool Insert_MemberCard(MemberShipCard card)
+        {
+            var CheckMemberName = MemberShipCardOper.Instance.SelectMemCardByName(card.CardName);
+            if (CheckMemberName.Count > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return MemberShipCardOper.Instance.Insert(card);
+            }
         }
     }
 }

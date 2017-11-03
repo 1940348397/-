@@ -8,6 +8,7 @@ using Common.LambdaOpertion;
 using Common.Extend;
 using DbOpertion.Models;
 using Common.Result;
+using System.Data.SqlClient;
 
 namespace DbOpertion.Operation
 {
@@ -77,20 +78,41 @@ namespace DbOpertion.Operation
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public List<MemberShipCard> SelectMemCardByTypeId(int MemberShipTypeId, string SearchKey, string Key, int start, int PageSize, bool desc = true)
+        //public List<MemberShipCard> SelectMemCardByTypeId(int MemberShipTypeId, string SearchKey, string Key, int start, int PageSize, bool desc = true)
+        //{
+        //    var query = new LambdaQuery<MemberShipCard>();
+        //    query.Where(p => p.MemberShipTypeId == MemberShipTypeId);
+        //    if (Key != null)
+        //    {
+        //        query.OrderByKey(Key, desc);
+        //    }
+        //    if (!SearchKey.IsNullOrEmpty())
+        //    {
+
+        //        query.Where(p => p.CardName.Contains(SearchKey) || p.CardPassword.Contains(SearchKey));
+        //    }
+        //    return query.GetQueryPageList(start, PageSize);
+        //}
+        public List<MemberCardByTypeInfo> SelectMemCardByTypeId(int MemberShipTypeId, string SearchKey, string Key, int start, int PageSize, bool desc = true)
         {
-            var query = new LambdaQuery<MemberShipCard>();
-            query.Where(p => p.MemberShipTypeId == MemberShipTypeId);
-            if (Key != null)
-            {
-                query.OrderByKey(Key, desc);
-            }
+            List<SqlParameter> parmList = new List<SqlParameter>();
+            string SqlWhereLike = null;
             if (!SearchKey.IsNullOrEmpty())
             {
-
-                query.Where(p => p.CardName.Contains(SearchKey) || p.CardPassword.Contains(SearchKey));
+                parmList.Add(new SqlParameter("@CardName", "%" + SearchKey + "%"));
+                parmList.Add(new SqlParameter("@UserNickName", "%" + SearchKey + "%"));
+                parmList.Add(new SqlParameter("@MemberShipCardId", "%" + SearchKey + "%"));
+                parmList.Add(new SqlParameter("@MemberShipTypeId", "%" + SearchKey + "%"));
+                parmList.Add(new SqlParameter("@ReleaseDate", "%" + SearchKey + "%"));
+                SqlWhereLike = @" and (CardName like @CardName or
+                                         UserNickName like @UserNickName or MemberShipCardId like @MemberShipCardId or
+                                         MemberShipTypeId like @MemberShipTypeId or ReleaseDate like @ReleaseDate)";
             }
-            return query.GetQueryPageList(start, PageSize);
+            parmList.Add(new SqlParameter("@MemberShipTypeId", MemberShipTypeId));
+            string sql = string.Format(@"select a.CardName,a.ReleaseDate,a.MemberShipTypeId,a.MemberShipCardId,a.IsUser,b.UserNickName,a.UserId from MemberShipCard a 
+                                         left join TUser b on a.UserId=b.UserId
+                                         where MemberShipTypeId=@MemberShipTypeId " + SqlWhereLike);
+            return SqlOpertion.Instance.GetQueryPage<MemberCardByTypeInfo>(sql, parmList, Key, desc, start, PageSize);
         }
 
         /// <summary>

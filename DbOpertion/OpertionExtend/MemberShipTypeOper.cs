@@ -55,5 +55,17 @@ namespace DbOpertion.Operation
 
 
         }
+        /// <summary>
+        /// 筛选重复的会员卡名称
+        /// </summary>
+        /// <param name="CardName"></param>
+        /// <returns></returns>
+        public List<MemberShipType> Check_MemCardName(string CardName)
+        {
+            var query = new LambdaQuery<MemberShipType>();
+            query.Where(p => p.CardName == CardName);
+            return query.GetQueryList();
+        }
+
     }
 }

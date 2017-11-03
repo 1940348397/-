@@ -28,7 +28,7 @@ namespace DbOpertion.Models
         /// <summary>
         ///
         /// </summary>
-        public Boolean? Active { get; set; }
+        public DateTime? CreateDate { get; set; }
         /// <summary>
         ///
         /// </summary>
