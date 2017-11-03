@@ -12,10 +12,6 @@ namespace DbOpertion.Models
         /// <summary>
         ///
         /// </summary>
-        public String CardName { get; set; }
-        /// <summary>
-        ///
-        /// </summary>
         public String CardPassword { get; set; }
         /// <summary>
         ///

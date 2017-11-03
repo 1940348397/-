@@ -12,15 +12,12 @@
 @section js{
     <script src="~/Content/js/Shade.js"></script>
     <script src="~/Content/js/ElectronicType/Index.js"></script>
-    <script src="~/Content/lib/js/jquery.form.js"></script>
 }
 
 @section css{
     <link href="~/Content/lib/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/css/DataTable.css" rel="stylesheet" />
     <link href="~/Content/css/Shade.css" rel="stylesheet" />
-    <link href="~/Content/css/ElectronicType/Index.css" rel="stylesheet" />
-  
 
 }
 @*<input type="hidden" id="Hidden_ElectronicTypeId" value="@ViewBag.ElectronicTypeId" />*@
@@ -67,6 +64,8 @@
                 "data": function (data) {
                     //添加额外的参数传给服务器
                     data.SearchKey = $("#search-Input").val();
+                   // data.ElectronicTypeId = $("#Hidden_ElectronicTypeId").val();
+                    //data.ElectronicTypeId = 2;
                     return JSON.stringify(data);
                 }
             },
@@ -92,24 +91,19 @@
                 render: function (data, type, full, meta) {
                     return '<a class="btn btn-sm btn-info" href="/ElectronicCard/ElectronicCardView?ElectronicTypeId=' + data + '">查看该类型已生成卡片</a>';
                 }
-            },
-            {
-                "targets": 3,
-                render: function (data, type, full, meta) {
-                    return '<img style="height:35px;" src="' + data + '"></img>';
-                }
             }]
         });
         //查询按钮
         $("#search").click(function () {
             userTable.api().ajax.reload();
         });
-        //点击新增类型卡按钮，弹出窗体
+        //添加按钮
         $("#insert").click(function () {
             add();
+            //InsertElectronicType();
         });
         //添加按钮
-        $("#Add_ElectronicCard").click(function () {
+        $("#Modify_ElectronicCard").click(function () {
           
             InsertElectronicType();
         });
@@ -124,7 +118,7 @@
         <div class="dialogTop">
             <a href="javascript:;" class="claseDialogBtn"><i class="fa fa-close"></i></a>
         </div>
-        <div id="editForm">
+        <form action="" method="post" id="editForm">
             <ul class="editInfos">
                 <li>
                     <label>
@@ -134,26 +128,21 @@
                 </li>
                 <li>
                     <label>
+                        卡片图案：<input type="text" id="CardImage" value="" class="ipt" />
+                        <input type="hidden" id="CardImage_Hidden" />
+                    </label>
+                </li>
+                <li>
+                    <label>
                         储值金额：<input type="text" id="CardMoney" value="" class="ipt" />
                         <input type="hidden" id="CardMoney_Hidden" />
                     </label>
                 </li>
-                <li class="Image_Li">
-                    <label class="Img_Label">
-                        卡片图案：
-                        <input type="hidden" id="MemberShipTypeId_Hidden" />
-                    </label>
-                    <button type="button" id="btn_show" class="btn btn-primary Uplod_Img">上传图片</button>
-
-                    <form id="form_upload" style="padding:20px; display:none;" action="upload" method="post" enctype="multipart/form-data">
-                        <input id="upImg" name="upImg" style="width:350px;height:25px;" size="38" type="file" /><input id="Sumbit_Img" type="submit" value="上传" />
-                    </form>
-                    <img alt="" style="display:none;" id="result" src="" />
-                </li>
+               
                 <li>
-                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input id="Add_ElectronicCard" type="button" onclick="" value="添加新类型卡" class="submitBtn" />
+                    <input id="Modify_ElectronicCard" type="button" onclick="" value="添加新类型卡" class="submitBtn" />
                 </li>
-                </ul>
-           </div>
-        </div>
+            </ul>
+        </form>
+    </div>
    </div>

@@ -36,37 +36,10 @@ namespace GZRYVillageWeb.Controllers.MvcPageControllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [UserLogin]
         public ActionResult Consumption(ElectronicCardType request)
         {
             ViewBag.ElectronicId = request.ElectronicId;
             return View();
-        }
-        /// <summary>
-        /// 上传卡片图案
-        /// </summary>
-        /// <param name="upImg"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult Upload(HttpPostedFileBase upImg)
-        {
-            string fileName = System.IO.Path.GetFileName(upImg.FileName);
-            string filePhysicalPath = Server.MapPath("~/upload/" + fileName);
-            string pic = "", error = "";
-            try
-            {
-                upImg.SaveAs(filePhysicalPath);
-                pic = "/upload/" + fileName;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-            }
-            return Json(new
-            {
-                pic = pic,
-                error = error
-            });
         }
     }
 }

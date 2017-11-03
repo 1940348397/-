@@ -17,7 +17,7 @@ namespace GZRYVillageWeb.Request.AjaxRequest.ElectronicType
         /// 卡片名称
         /// </summary>
         [Required(AllowEmptyStrings = false, ErrorMessage = "卡片名称不能为空")]
-        public string CardTypeName { get; set; }
+        public string CardName { get; set; }
 
         /// <summary>
         /// 卡片图案
@@ -28,7 +28,6 @@ namespace GZRYVillageWeb.Request.AjaxRequest.ElectronicType
         /// <summary>
         /// 储值金额
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "请输入储值金额")]
         [DecimalValid(AllowZero = true, ErrorMessage = "储值金额请输入数字")]
         public decimal CardMoney { get; set; }
     }

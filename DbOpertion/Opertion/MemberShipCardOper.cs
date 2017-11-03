@@ -29,19 +29,6 @@ namespace DbOpertion.Operation
             return query.GetQueryList(connection, transaction);
         }
 
-
-        /// <summary>
-        /// 根据主键筛选数据
-        /// </summary>
-        /// <param name="KeyId">主键Id</param>
-        /// <returns>是否成功</returns>
-        public MemberShipCard SelectById(int KeyId, IDbConnection connection = null, IDbTransaction transaction = null)
-        {
-            var query = new LambdaQuery<MemberShipCard>();
-            query.Where(p => p.MemberShipCardId == KeyId);
-            return query.GetQueryList(connection, transaction).FirstOrDefault();
-        }
-
         /// <summary>
         /// 根据分页筛选数据
         /// </summary>
@@ -119,9 +106,9 @@ namespace DbOpertion.Operation
             {
                 update.Set(p => p.UserId == membershipcard.UserId);
             }
-            if (!membershipcard.CreateDate.IsNullOrEmpty())
+            if (!membershipcard.Active.IsNullOrEmpty())
             {
-                update.Set(p => p.CreateDate == membershipcard.CreateDate);
+                update.Set(p => p.Active == membershipcard.Active);
             }
             if (!membershipcard.ReleaseDate.IsNullOrEmpty())
             {
@@ -162,9 +149,9 @@ namespace DbOpertion.Operation
             {
                 insert.Insert(p => p.UserId == membershipcard.UserId);
             }
-            if (!membershipcard.CreateDate.IsNullOrEmpty())
+            if (!membershipcard.Active.IsNullOrEmpty())
             {
-                insert.Insert(p => p.CreateDate == membershipcard.CreateDate);
+                insert.Insert(p => p.Active == membershipcard.Active);
             }
             if (!membershipcard.ReleaseDate.IsNullOrEmpty())
             {

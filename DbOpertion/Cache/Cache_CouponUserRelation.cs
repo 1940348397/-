@@ -49,8 +49,17 @@ namespace DbOpertion.Cache
             {
                 asc = false;
             }
-            return CouponUserRelationOper.Instance.SelectPageByUserId(UserId, SearchKey, Key, start, pageSize, asc);
+            return CouponUserRelationOper.Instance.SelectPageByUserId(UserId, SearchKey, Key, start, pageSize);
         }
+
+        /// <summary>
+        /// 全部数据条数
+        /// </summary>
+        /// <returns></returns>
+        //public int SelectAllCount(int UserId)
+        //{
+        //    return CouponUserRelationOper.Instance.SelectAllCount(UserId);
+        //}
 
         /// <summary>
         /// 筛选后的数据条数

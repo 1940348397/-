@@ -14,12 +14,6 @@
 @section js{
     <script src="~/Content/js/Shade.js"></script>
     <script src="~/Content/js/MemberCard/Index.js"></script>
-
-@*<script src="~/Content/js/DateTime/jquery-1.11.0.min.js"></script>*@
-    @*<script src="~/Content/js/DateTime/jquery-ui-1.10.4.custom.min.js"></script>
-    <script src="~/Content/js/DateTime/jquery-ui-timepicker-addon.js"></script>*@
-    @*<script src="~/Content/js/DateTime/jquery-ui-timepicker-zh-CN.js"></script>
-    <script src="~/Content/js/DateTime/jquery.ui.datepicker-zh-CN.js"></script>*@
 }
 
 @section css{
@@ -27,8 +21,6 @@
     <link href="~/Content/css/DataTable.css" rel="stylesheet" />
     <link href="~/Content/css/Shade.css" rel="stylesheet" />
 
-@*<link href="~/Content/css/DateTime/admin.css" rel="stylesheet" />
-<link href="~/Content/css/DateTime/jquery-ui.css" rel="stylesheet" />*@
 }
 
 <input type="hidden" id="Hidden_MemberShipCard" value="@ViewBag.MemberShipTypeId" />
@@ -42,7 +34,7 @@
                 </div>
                 <div class="col-lg-2 pull-left">
                     <button type="button" class="btn btn-primary btn-success" data-toggle="modal" data-target="#modalSuccess" id="insert">
-                        <i class="glyphicon glyphicon-plus"></i> 添加会员卡
+                        <i class="glyphicon glyphicon-plus"></i> 添加数据
                     </button>
                 </div>
             </div>
@@ -56,10 +48,11 @@
                                 <label for="checkbox-all"></label>
                             </div>
                         </th>
-                        <th data-data="CardName">会员卡名</th>
-                        <th data-data="UserNickName">绑定人</th>
-                        <th data-data="ReleaseDate">激活日期</th>
+                        <th data-data="CardName">会员卡类型名</th>
+                        <th data-data="MemberShipTypeId">卡片图案</th>
                         <th data-data="IsUser">是否被使用</th>
+                        @*<th data-data="IsDelete">是否有效</th>*@
+                   
                     </tr>
                 </thead>
             </table>
@@ -88,21 +81,17 @@
                 render: function (data, type, full, meta) {
                     var num = meta.row + 1;
                     return '<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light"><input type="checkbox" id="checkbox-all-' + num + '" value="' + num + '" /><label for="checkbox-all-' + num + '"></label></div>';
-                }
+                }             
             }]
         });
         //查询按钮
         $("#search").click(function () {
             userTable.api().ajax.reload();
         });
-        //点击添加按钮弹出窗体
+        //添加按钮
         $("#insert").click(function () {
-            InsertMemberCard();
+            add();
         });
-        $("#Insert_MemberCard").click(function () {
-            var MemberShipTypeId = $("#Hidden_MemberShipCard").val();
-            Insert_MemberCard(MemberShipTypeId);
-        })
     });
 
 </script>
@@ -114,58 +103,5 @@
     });
 
 </script>
-<div class="box">
-    <div id="dialogBg"></div>
-    <div id="dialog" class="animated">
-        <img src="~/Content/image/Shade/ico.png" class="dialogIco" width="50" height="50" />
-        <div class="dialogTop">
-            <a href="javascript:;" class="claseDialogBtn"><i class="fa fa-close"></i></a>
-        </div>
-        <form action="" method="post" id="editForm">
-
-            <table>
-                <colgroup>
-                    <col style="width:30%;" />
-                    <col style="width:70%;" />
-                </colgroup>
-                <tr>
-                    <td class="Label">
-                        卡名称：
-                        <input type="hidden" id="CardName_Hidden" />
-                    </td>
-                    <td>
-                        <input type="text" id="CardName" value="" class="ipt" />
-                    </td>
-                </tr>
-                <tr>
-                    <td class="Label">
-                        卡密：
-                        <input type="hidden" id="CardPassword_Hidden" />
-                    </td>
-                    <td>
-                        
-                        <input type="password" id="CardPassword" value="" class="ipt" />
-                    </td>
-                </tr>
-                @*<tr>
-                    <td class="Label">
-                        日期：
-                        <input type="hidden" id="CreateDate_Hidden" />
-                    </td>
-                    <td>
-
-                        <input type="text" id="CreateDate" value="" class="ipt" />
-                    </td>
-                </tr>*@
-                <tr>
-                    <td colspan="2" class="submit">
-                        <input id="Insert_MemberCard" type="button" onclick="" value="添加会员卡" class="submitBtn" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
-
 
 

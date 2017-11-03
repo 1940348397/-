@@ -118,12 +118,6 @@ namespace Common.MemCache.EnyimCache
             return Client.Store(StoreMode.Set, key, destObj);
         }
 
-        public bool Modify(string key, object destObj, int time)
-        {
-            key = AppKey + key;
-            return Client.Store(StoreMode.Set, key, destObj, DateTime.Now.AddMinutes(time));
-        }
-
         /// <summary>
         /// 清空缓存 TO DO
         /// </summary>

@@ -71,9 +71,17 @@ namespace DbOpertion.Cache
         /// <returns></returns>
         public TUser AdminGetUserInfo(int UserId)
         {
-            var User = TUserOper.Instance.SelectById(UserId);
-            return User;
+            var List_User = TUserOper.Instance.SelectById(UserId);
+            TUser user;
+            if (List_User != null && List_User.Count != 0)
+            {
+                user = List_User.FirstOrDefault();
+            }
+            else
+            {
+                user = new TUser();
+            }
+            return user;
         }
-       
     }
 }

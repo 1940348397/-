@@ -54,9 +54,9 @@ namespace DbOpertion.Cache
         /// <summary>
         /// 筛选会员卡类型数目
         /// </summary>
-        /// <param name="SearchKey">搜索关键字</param>
-        /// <param name="Key">排序主键</param>
-        /// <param name="desc">排序</param>
+        /// <param name="SearchKey"></param>
+        /// <param name="Key"></param>
+        /// <param name="desc"></param>
         /// <returns></returns>
         public int SelectMemberCardTypeCount(string SearchKey, string Key, DataTablesOrderDir? desc)
         {
@@ -70,24 +70,6 @@ namespace DbOpertion.Cache
                 order = true;
             }
             return MemberShipTypeOper.Instance.SelectCount(SearchKey, Key, order);
-        }
-        /// <summary>
-        /// 添加新类型卡
-        /// </summary>
-        /// <param name="Card"></param>
-        /// <returns></returns>
-        public bool Insert_MemCardType(MemberShipType Card)
-        {
-            var List_CheckName = MemberShipTypeOper.Instance.Check_MemCardName(Card.CardName);
-            if (List_CheckName.Count > 0)
-            {
-                return false;
-            }
-            else
-            {
-                return MemberShipTypeOper.Instance.Insert(Card);
-            }
-           
         }
     }
 }
